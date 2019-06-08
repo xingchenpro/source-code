@@ -52,16 +52,34 @@ import org.springframework.util.Assert;
  */
 public class AnnotationConfigApplicationContext extends GenericApplicationContext implements AnnotationConfigRegistry {
 
+	/**
+	 * 这个类是一个Reader，一个读取器
+	 * AnnotatedBeanDefinition 读取一个被加了注解的Bean
+	 * 这个类是在构造方法中实例化的
+	 *
+	 */
 	private final AnnotatedBeanDefinitionReader reader;
 
+	/**
+	 * 扫描器，扫描所有加了注解的Bean
+	 * 在构造方法中实例化
+	 */
 	private final ClassPathBeanDefinitionScanner scanner;
 
 
 	/**
+	 * 初始化一个Bean的读取器和扫描器
+	 * 默认构造函数，如果直接调用这个构造方法，稍后需要通过调用其register()注册配置类javaconfig,并调用refresh()方法刷新容器
+	 * 触发容器对注解Bean的载入，解析和注册的过程
 	 * Create a new AnnotationConfigApplicationContext that needs to be populated
 	 * through {@link #register} calls and then manually {@linkplain #refresh refreshed}.
 	 */
 	public AnnotationConfigApplicationContext() {
+		/**
+		 * 调用父类的构造方法
+		 * 创建一个读取注解的Bean定义读取器(可以读取被加了注解的类)
+		 * Bean定义？BeanDefinition
+		 */
 		this.reader = new AnnotatedBeanDefinitionReader(this);
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
 	}
@@ -77,14 +95,20 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	}
 
 	/**
+	 * 传入一个被javaconfig注解的配置类
+	 * 然后把这个被注解了javaconfig的类通过注解读取器读取后继而解析
 	 * Create a new AnnotationConfigApplicationContext, deriving bean definitions
 	 * from the given annotated classes and automatically refreshing the context.
 	 * @param annotatedClasses one or more annotated classes,
 	 * e.g. {@link Configuration @Configuration} classes
 	 */
 	public AnnotationConfigApplicationContext(Class<?>... annotatedClasses) {
+		//由于他有父类，会先调用父类的构造方法，然后才会调用自己的构造方法(先调用父类，再调用子类)
+		//在自己的构造方法中初始一个读取器和扫描器
 		this();
+		//读取Bean的定义到Map中
 		register(annotatedClasses);
+		//初始化Spring的环境
 		refresh();
 	}
 
@@ -144,6 +168,10 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	//---------------------------------------------------------------------
 
 	/**
+	 * 注册单个Bean给容器
+	 * 新加的类可以使用这个方法
+	 * 注册之后需要手动调用refresh去触发容器解析注解
+	 * register可以注册一个配置类，可以单独注册一个Bean
 	 * Register one or more annotated classes to be processed.
 	 * <p>Note that {@link #refresh()} must be called in order for the context
 	 * to fully process the new classes.

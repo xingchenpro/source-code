@@ -142,13 +142,21 @@ public class BeanDefinitionReaderUtils {
 	 * @throws BeanDefinitionStoreException if registration failed
 	 */
 	public static void registerBeanDefinition(
+
+			/**
+			 * 封装 beanName, definitionHolder.getBeanDefinition() 进行传递的作用,下面又拆分了
+			 */
 			BeanDefinitionHolder definitionHolder, BeanDefinitionRegistry registry)
 			throws BeanDefinitionStoreException {
 
 		// Register bean definition under primary name.
 		String beanName = definitionHolder.getBeanName();
+		/**
+		 * 把Bean的描述放到Map中，还没有对象产生
+		 */
 		registry.registerBeanDefinition(beanName, definitionHolder.getBeanDefinition());
 
+		//别名
 		// Register aliases for bean name, if any.
 		String[] aliases = definitionHolder.getAliases();
 		if (aliases != null) {

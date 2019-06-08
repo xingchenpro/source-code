@@ -72,6 +72,7 @@ class ConditionEvaluator {
 	}
 
 	/**
+	 * Conditional : SpringBoot中大量使用
 	 * Determine if an item should be skipped based on {@code @Conditional} annotations.
 	 * @param metadata the meta data
 	 * @param phase the phase of the call

@@ -1,8 +1,8 @@
 package com.javahly.test;
 
-import com.javahly.dao.UserDao;
+import com.javahly.config.AppConfig;
+import com.javahly.dao.IndexDao;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.stereotype.Component;
 
 /**
  * @author :hly
@@ -17,11 +17,9 @@ import org.springframework.stereotype.Component;
 public class Test {
 
 	public static void main(String[] args){
-		AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext();
-		annotationConfigApplicationContext.register(UserDao.class);
-		annotationConfigApplicationContext.refresh();
-		UserDao userDao = (UserDao) annotationConfigApplicationContext.getBean("userDao");
-		userDao.query();
-
+		//把Spring所有的前提环境准备好
+		AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(AppConfig.class);
+		IndexDao indexDao = annotationConfigApplicationContext.getBean(IndexDao.class);
+		indexDao.query();
 	}
 }

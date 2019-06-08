@@ -233,9 +233,19 @@ public class AnnotationConfigUtils {
 		}
 	}
 
+	/**
+	 * getMetadata：元数据
+	 * @param abd
+	 */
 	public static void processCommonDefinitionAnnotations(AnnotatedBeanDefinition abd) {
 		processCommonDefinitionAnnotations(abd, abd.getMetadata());
 	}
+
+	/**
+	 * 检查常用注解(Scope,Quality，Primary)
+	 * @param abd 描述对象
+	 * @param metadata
+	 */
 
 	static void processCommonDefinitionAnnotations(AnnotatedBeanDefinition abd, AnnotatedTypeMetadata metadata) {
 		AnnotationAttributes lazy = attributesFor(metadata, Lazy.class);
