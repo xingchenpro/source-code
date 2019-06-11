@@ -34,7 +34,7 @@ import org.springframework.context.ResourceLoaderAware;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringValueResolver;
 
-/**
+/**接口：BeanPostProcessor
  * {@link org.springframework.beans.factory.config.BeanPostProcessor}
  * implementation that passes the ApplicationContext to beans that
  * implement the {@link EnvironmentAware}, {@link EmbeddedValueResolverAware},
@@ -116,6 +116,11 @@ class ApplicationContextAwareProcessor implements BeanPostProcessor {
 			if (bean instanceof MessageSourceAware) {
 				((MessageSourceAware) bean).setMessageSource(this.applicationContext);
 			}
+			/**
+			 * Spring Set一个applicationContext对象
+			 * 当一个对象实现了ApplicationContextAware对象只需要提供setter就能得到applicationContext
+			 *
+			 */
 			if (bean instanceof ApplicationContextAware) {
 				((ApplicationContextAware) bean).setApplicationContext(this.applicationContext);
 			}

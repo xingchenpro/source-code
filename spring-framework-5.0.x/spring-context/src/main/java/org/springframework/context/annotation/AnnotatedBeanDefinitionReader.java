@@ -59,7 +59,7 @@ public class AnnotatedBeanDefinitionReader {
 	private ConditionEvaluator conditionEvaluator;
 
 
-	/**
+	/**BeanDefinitionRegistry 一个bd的注册器，把bd放到bdMap中
 	 * Create a new {@code AnnotatedBeanDefinitionReader} for the given registry.
 	 * If the registry is {@link EnvironmentCapable}, e.g. is an {@code ApplicationContext},
 	 * the {@link Environment} will be inherited, otherwise a new

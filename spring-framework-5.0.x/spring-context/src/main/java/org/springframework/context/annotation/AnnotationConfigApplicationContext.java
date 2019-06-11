@@ -79,6 +79,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 		 * 调用父类的构造方法
 		 * 创建一个读取注解的Bean定义读取器(可以读取被加了注解的类)
 		 * Bean定义？BeanDefinition
+		 * 只能读取加了注解的类，this代表整个大的环境
 		 */
 		this.reader = new AnnotatedBeanDefinitionReader(this);
 		this.scanner = new ClassPathBeanDefinitionScanner(this);

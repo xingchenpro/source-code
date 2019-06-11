@@ -42,7 +42,7 @@ import org.springframework.lang.Nullable;
  */
 
 /**
- * BeanPostProcessor 是Spring框架提供的一个扩展点(不止一个)，能够扩展Spring。
+ * BeanPostProcessor 是Spring框架提供的一个扩展点(不止一个,5个)，能够扩展Spring。
  * 这个接口有很多实现类，这些类加起来仅仅是一种Spring的扩展点。BeanFactoryPostProcessor也是一个扩展点
  * 通过实现BeanPostProcessor,程序员可以手动插手Bean实例化的过程，从而减轻BeanFactory的负担
  * 这个几口可以设置多个，形成一个列表，依次执行

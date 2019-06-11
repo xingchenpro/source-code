@@ -14,7 +14,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
  * @desc :
  */
 
-public class Test {
+public class Test1 {
 
 	public static void main(String[] args){
 		//把Spring所有的前提环境准备好

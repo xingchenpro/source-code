@@ -25,22 +25,19 @@ org.springframework.context.support.AbstractApplicationContext.refresh
             org.springframework.beans.factory.config.BeanPostProcessor
 
 
-
-
-
 DefaultListableBeanFactory(Bean工厂：beanDefinitionMap+beanDefinitionNames(List)),beanDefinitionMap有哪些类就产生哪些类
 beanDefinitionMap：有7个类 AnnotatedBeanDefinitionReader 完成7个类的注册,为什么会注册进去
 
 org.springframework.context.support.AbstractApplicationContext.refresh 实例化Spring容器
 
+SpringBean的扩展的几个扩展点(5个)
+org.springframework.beans.factory.config.BeanFactoryPostProcessor(以在Spring的bean创建之前修改bean的定义属性)
+org.springframework.beans.factory.config.BeanPostProcessor (程序员可以手动插手Bean实例化的过程，从而减轻BeanFactory的负担)
+    org.springframework.context.support.ApplicationContextAwareProcessor
 
-SpringBean的扩展有几个点
-org.springframework.context.support.ApplicationContextAwareProcessor
-
+Bean的定义
 org.springframework.beans.factory.annotation.AnnotatedBeanDefinition
     org.springframework.beans.factory.config.BeanDefinition
-
-
 
 @Qualifier(xxx)
 作用：有两个实现类，使用哪个

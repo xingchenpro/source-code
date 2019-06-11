@@ -148,16 +148,22 @@ public class AnnotationConfigUtils {
 		DefaultListableBeanFactory beanFactory = unwrapDefaultListableBeanFactory(registry);
 		if (beanFactory != null) {
 			if (!(beanFactory.getDependencyComparator() instanceof AnnotationAwareOrderComparator)) {
+				//AnnotationAwareOrderComparator 主要解析@Order注解和@Priority
 				beanFactory.setDependencyComparator(AnnotationAwareOrderComparator.INSTANCE);
 			}
+			//ContextAnnotationAutowireCandidateResolver 提供延迟处理加载的功能
 			if (!(beanFactory.getAutowireCandidateResolver() instanceof ContextAnnotationAutowireCandidateResolver)) {
 				beanFactory.setAutowireCandidateResolver(new ContextAnnotationAutowireCandidateResolver());
 			}
 		}
 
+		//BeanDefinitionHolder beanDefinition的Map，方便传参
 		Set<BeanDefinitionHolder> beanDefs = new LinkedHashSet<>(8);
-
+		//BeanDefinition的注册，需要注册每个bean的类型，注册到工厂中
 		if (!registry.containsBeanDefinition(CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME)) {
+			//ConfigurationClassPostProcessor的类型是BeanDefinitionRegistryPostProcessor
+			//BeanDefinitionRegistryPostProcessor最终实现 BeanFactoryPostProcessor
+			//RootBeanDefinition:BeanDefinition 子类，描述Spring内部提供的类
 			RootBeanDefinition def = new RootBeanDefinition(ConfigurationClassPostProcessor.class);
 			def.setSource(source);
 			beanDefs.add(registerPostProcessor(registry, def, CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME));

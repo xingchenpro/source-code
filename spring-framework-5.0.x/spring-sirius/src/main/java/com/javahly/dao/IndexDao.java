@@ -1,5 +1,8 @@
 package com.javahly.dao;
 
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +19,9 @@ import javax.annotation.PostConstruct;
  */
 @Scope
 @Component
-public class IndexDao {
+public class IndexDao implements ApplicationContextAware {
+
+	ApplicationContext applicationContext;
 
 	public IndexDao() {
 		System.out.println("构造方法");
@@ -29,5 +34,11 @@ public class IndexDao {
 
 	public void query(){
 		System.out.println("query......");
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
+		System.out.println(applicationContext);
 	}
 }
