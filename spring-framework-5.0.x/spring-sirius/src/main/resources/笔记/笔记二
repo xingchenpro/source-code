@@ -5,12 +5,78 @@ org.springframework.context.support.GenericApplicationContext //实例化一个�
              org.springframework.context.annotation.AnnotationConfigUtils
                  //1.添加AnnotationAwareOrderComparator类的对象,主要排序
                  //2.ContextAnnotationAutowireCandidateResolver 提供延迟处理加载的功能
-                 //3.BeanDefinitionMap注册一个ConfigurationClassPostProcessor ：org.springframework.context.annotation.internalConfigurationAnnotationProcessor?
+                 //3.BeanDefinitionMap注册一个ConfigurationClassPostProcessor ：org.springframework.context.annotation.internalConfigurationAnnotationProcessor
+                 ？invokeBeanFactoryPostProcessors 中得到 ConfigurationClassPostProcessor
+                 invokeBeanFactoryPostProcessors在spring的beanFactory初始化的过程中去做一些事情
+                 委托了多个通过一个实现了BeanDefinitionRegistryPostProcessor或者BeanFactoryProcessor接口的类来做这些事情，有自定义的，也有Spring内部的
+                 ConfigurationAnnotationProcessor就是一个spring内部得BeanDefinitionRegistryPostProcessor
+                 如果不添加这里就没办法委托ConfigurationAnnotationProcessor做一些功能
                  //RequiredAnnotationBeanPostProcessor
                  org.springframework.context.annotation.AnnotationConfigUtils.registerAnnotationConfigProcessors()
                     //BeanDefinitionMap注册一个 bd
                     org.springframework.context.annotation.AnnotationConfigUtils.registerPostProcessor
+                        org.springframework.context.support.AbstractApplicationContext.refresh
+                            //准备工作包括，设置启动时间，是否激活标识位，初始化属性源配置
+                            org.springframework.context.support.AbstractApplicationContext.prepareRefresh
+                            //准备工作，得到 DefaultListableBeanFactory(生命周期的开始,严格来说，初始化Bean工厂)
+                            org.springframework.context.support.AbstractApplicationContext.obtainFreshBeanFactory
+                            //准备bean工厂，重要(生命周期的开始)
+                            org.springframework.context.support.AbstractApplicationContext.prepareBeanFactory
+                                ////类加载器
+                                org.springframework.beans.factory.config.ConfigurableBeanFactory.setBeanClassLoader
+                                //解析bean表达式
+                                org.springframework.beans.factory.config.ConfigurableBeanFactory.setBeanExpressionResolver
+                                //添加一个后置处理器
+                                //能够在bean中获得各种Aware
+                                //List<BeanPostProcessor> beanPostProcessors
+                                org.springframework.beans.factory.config.ConfigurableBeanFactory.addBeanPostProcessor
+                             //当前版本没有，后面版本可能会扩展
+                            org.springframework.context.support.AbstractApplicationContext.postProcessBeanFactory
+                            //设置自定义的ProcessBeanFactory
+                            org.springframework.context.support.AbstractApplicationContext.invokeBeanFactoryPostProcessors
+                                org.springframework.context.support.PostProcessorRegistrationDelegate
+                                    org.springframework.beans.factory.config.BeanFactoryPostProcessor
+                                    org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor
+                                    org.springframework.beans.factory.ListableBeanFactory.getBeanNamesForType(java.lang.Class<?>, boolean, boolean)
+                                    //调用这个方法
+                                    //循环所有的beanDefinitionRegistryPostProcessor
+                                    内部postProcessBeanDefinitionRegistry
+                                    org.springframework.context.support.PostProcessorRegistrationDelegate.invokeBeanDefinitionRegistryPostProcessors
+                                        //调用扩展方法
+                                        org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor.postProcessBeanDefinitionRegistry
+                                            //拿出所有bd,判断是否加了@Configuration
+                                            org.springframework.context.annotation.ConfigurationClassPostProcessor.processConfigBeanDefinitions
+                                                //1.得到bd中描述的类的元数据
+                                                //2.判断是不是加了@Configuration org.springframework.core.type.AnnotatedTypeMetadata.isAnnotated
+                                                //3.如果加了@Configuration 添加到set当中，把set传给下面的方法解析
+                                                    org.springframework.context.annotation.ConfigurationClassUtils.checkConfigurationClassCandidate
+                                                        org.springframework.context.annotation.ConfigurationClassParser.parse(java.util.Set<org.springframework.beans.factory.config.BeanDefinitionHolder>)
+                                                             org.springframework.context.annotation.ConfigurationClassParser.parse(org.springframework.core.type.AnnotationMetadata, java.lang.String)
+                                                                org.springframework.context.annotation.ConfigurationClassParser.processConfigurationClass
+                                                                    org.springframework.context.annotation.ConfigurationClassParser.doProcessConfigurationClass
+                                                                        //解析扫描的基本信息，比如是否过滤，加入新的包
+                                                                        org.springframework.context.annotation.ComponentScanAnnotationParser.parse
+                                                                            org.springframework.context.annotation.ClassPathBeanDefinitionScanner.doScan
+                                                                                org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider.findCandidateComponents
+
+
+
+
+
         org.springframework.context.annotation.ClassPathBeanDefinitionScanner //扫描一个类，包，转换为bd
 
 
-       beanDefinitionMap 初始化7个对象
+
+beanDefinitionMap 初始化7个对象
+1.appconfig
+2.ConfigurationClassPostProcessor
+
+//把除默认bd外的bd放到Map中
+org.springframework.beans.factory.support.DefaultListableBeanFactory.beanDefinitionMap
+Spring扩展点
+1.BeanPostProcessor
+2.BeanFactoryProcessor
+3.BeanDefinitionRegistryPostProcessor(扩展BeanFactoryProcessor)
+
+
+org.springframework.beans.factory.config.BeanFactoryPostProcessor 插手实例化

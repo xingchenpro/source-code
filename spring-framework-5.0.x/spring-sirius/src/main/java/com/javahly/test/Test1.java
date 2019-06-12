@@ -20,6 +20,7 @@ public class Test1 {
 		//把Spring所有的前提环境准备好
 		AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(AppConfig.class);
 		IndexDao indexDao = annotationConfigApplicationContext.getBean(IndexDao.class);
+
 		indexDao.query();
 	}
 }

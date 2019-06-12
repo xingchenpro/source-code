@@ -530,7 +530,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 			// Prepare the bean factory for use in this context.
 			/**
-			 * 重要(生命周期的开始)
+			 * 准备bean工厂，重要(生命周期的开始)
 			 */
 			prepareBeanFactory(beanFactory);
 
@@ -671,8 +671,12 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		/**
 		 * 最核心，没有之一
 		 * 添加一个后置处理器
+		 * 能够在bean中获得各种Aware
 		 */
 		beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
+		/**
+		 * 自动注入忽略的列表
+		 */
 		beanFactory.ignoreDependencyInterface(EnvironmentAware.class);
 		beanFactory.ignoreDependencyInterface(EmbeddedValueResolverAware.class);
 		beanFactory.ignoreDependencyInterface(ResourceLoaderAware.class);
@@ -725,6 +729,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * <p>Must be called before singleton instantiation.
 	 */
 	protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
+		//getBeanFactoryPostProcessors() 得到自己定义的（就是程序员自己写的，并且没有交给spring管理，就是没有加上@Component）
 		PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors());
 
 		// Detect a LoadTimeWeaver and prepare for weaving, if found in the meantime
