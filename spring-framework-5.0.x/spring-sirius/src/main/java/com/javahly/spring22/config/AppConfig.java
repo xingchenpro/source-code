@@ -1,4 +1,4 @@
-package com.javahly.config;
+package com.javahly.spring22.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -8,11 +8,12 @@ import org.springframework.context.annotation.Configuration;
  * @github :https://github.com/huangliangyun
  * @blog :http://www.javahly.com/
  * @CSDN :blog.csdn.net/Sirius_hly
- * @date :2019/6/8
+ * @date :2019/6/29
  * @QQ :1136513099
  * @desc :
  */
 @Configuration
-@ComponentScan("com.javahly")
+@ComponentScan("com.javahly.spring22")
 public class AppConfig {
+
 }

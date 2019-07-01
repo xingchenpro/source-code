@@ -276,9 +276,10 @@ final class PostProcessorRegistrationDelegate {
 	 */
 	private static void invokeBeanDefinitionRegistryPostProcessors(
 			Collection<? extends BeanDefinitionRegistryPostProcessor> postProcessors, BeanDefinitionRegistry registry) {
-
+		//只有一条数据
 		for (BeanDefinitionRegistryPostProcessor postProcessor : postProcessors) {
 			//postProcessBeanDefinitionRegistry :BeanDefinitionRegistryPostProcessor扩展的方法
+			//最重要
 			postProcessor.postProcessBeanDefinitionRegistry(registry);
 		}
 	}

@@ -272,6 +272,8 @@ public class AnnotatedBeanDefinitionReader {
 				}
 			}
 		}
+
+		//自定义注解
 		for (BeanDefinitionCustomizer customizer : definitionCustomizers) {
 			customizer.customize(abd);
 		}
@@ -282,6 +284,9 @@ public class AnnotatedBeanDefinitionReader {
 
 		BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(abd, beanName);
 
+		/**
+		 * 代理模型，重点
+		 */
 		definitionHolder = AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
 
 		/**

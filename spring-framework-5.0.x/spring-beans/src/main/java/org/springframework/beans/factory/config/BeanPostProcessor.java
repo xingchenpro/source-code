@@ -45,17 +45,17 @@ import org.springframework.lang.Nullable;
  * BeanPostProcessor 是Spring框架提供的一个扩展点(不止一个,5个)，能够扩展Spring。
  * 这个接口有很多实现类，这些类加起来仅仅是一种Spring的扩展点。BeanFactoryPostProcessor也是一个扩展点
  * 通过实现BeanPostProcessor,程序员可以手动插手Bean实例化的过程，从而减轻BeanFactory的负担
- * 这个几口可以设置多个，形成一个列表，依次执行
+ * 这个接口可以有多个类实现，形成一个列表，依次执行
  * 比如AOP就是在bean实例后期将切面逻辑织入bean实例中的
  * AOP也是通过BeanPostProcessor 和IOC建立起了联系
  * Spring提供了很多默认的PostProcessor(后置处理器)
  * 这个接口简单，但是实现类复杂
  * Spring默认的实现：
  * 一.ApplicationContextAwareProcessor
- * ACAP ：程序自定义的Bean实现 ApplicationContextAware 接口时注入 ApplicationContext 对象
+ * ACAP ：程序自定义的Bean，实现 ApplicationContextAware 接口时注入 ApplicationContext 对象
  * 二.InitDestroyAnnotationBeanPostProcessor
  * 自定义初始化和销毁方法
- * Sprig提供的三种初始化和销毁方法是
+ * Spring提供的三种初始化和销毁方法是
  * 1.@Bean指定init-methid,destroy-method
  * 2.Bean实现InitializingBean 接口和实现DisposableBean
  * 3.@PostConstruct(init初始化) @PreDestroy

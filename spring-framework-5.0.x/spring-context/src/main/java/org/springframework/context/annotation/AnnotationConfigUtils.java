@@ -145,10 +145,11 @@ public class AnnotationConfigUtils {
 	public static Set<BeanDefinitionHolder> registerAnnotationConfigProcessors(
 			BeanDefinitionRegistry registry, @Nullable Object source) {
 
+		//从环境中得到一个工厂
 		DefaultListableBeanFactory beanFactory = unwrapDefaultListableBeanFactory(registry);
 		if (beanFactory != null) {
 			if (!(beanFactory.getDependencyComparator() instanceof AnnotationAwareOrderComparator)) {
-				//AnnotationAwareOrderComparator 主要解析@Order注解和@Priority
+				//添加AnnotationAwareOrderComparator类的对象 主要解析@Order注解和@Priority
 				beanFactory.setDependencyComparator(AnnotationAwareOrderComparator.INSTANCE);
 			}
 			//ContextAnnotationAutowireCandidateResolver 提供延迟处理加载的功能
@@ -159,11 +160,14 @@ public class AnnotationConfigUtils {
 
 		//BeanDefinitionHolder beanDefinition的Map，方便传参
 		Set<BeanDefinitionHolder> beanDefs = new LinkedHashSet<>(8);
+		//registry 整个环境
+		//判断有没有一个beanName等于这个常量 internalConfigurationAnnotationProcessor
 		//BeanDefinition的注册，需要注册每个bean的类型，注册到工厂中
 		if (!registry.containsBeanDefinition(CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME)) {
 			//ConfigurationClassPostProcessor的类型是BeanDefinitionRegistryPostProcessor
 			//BeanDefinitionRegistryPostProcessor最终实现 BeanFactoryPostProcessor
 			//RootBeanDefinition:BeanDefinition 子类，描述Spring内部提供的类
+			//ConfigurationClassPostProcessor通过构造方法成为一个bd
 			RootBeanDefinition def = new RootBeanDefinition(ConfigurationClassPostProcessor.class);
 			def.setSource(source);
 			beanDefs.add(registerPostProcessor(registry, def, CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME));
@@ -222,6 +226,7 @@ public class AnnotationConfigUtils {
 			BeanDefinitionRegistry registry, RootBeanDefinition definition, String beanName) {
 
 		definition.setRole(BeanDefinition.ROLE_INFRASTRUCTURE);
+		//把bd放到Map里面
 		registry.registerBeanDefinition(beanName, definition);
 		return new BeanDefinitionHolder(definition, beanName);
 	}
@@ -249,6 +254,7 @@ public class AnnotationConfigUtils {
 
 	/**
 	 * 检查常用注解(Scope,Quality，Primary)
+	 * 把注解放到bd里面
 	 * @param abd 描述对象
 	 * @param metadata
 	 */

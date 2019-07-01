@@ -344,6 +344,9 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 	@Override
 	public <T> T getBean(Class<T> requiredType) throws BeansException {
+		/**
+		 * 空壳方法，所有逻辑都封装在doGetBean
+		 */
 		return getBean(requiredType, (Object[]) null);
 	}
 
@@ -802,6 +805,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 		if (beanDefinition instanceof AbstractBeanDefinition) {
 			try {
+				//验证是不是bd
 				((AbstractBeanDefinition) beanDefinition).validate();
 			}
 			catch (BeanDefinitionValidationException ex) {
@@ -864,8 +868,12 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 				 * beanDefinitionMap 有7个类
 				 */
 				// Still in startup registration phase
+				//this:DefaultListableBeanFactory
 				this.beanDefinitionMap.put(beanName, beanDefinition);
 				this.beanDefinitionNames.add(beanName);
+				// manualSingletonNames缓存了手动注册的单例bean，所以需要调用一下remove方法，防止beanName重复
+				// 例如：xmlBeanFactory.registerSingleton("myDog", new Dog());
+				// 就可以向manualSingletonNames中注册单例bean
 				this.manualSingletonNames.remove(beanName);
 			}
 			this.frozenBeanDefinitionNames = null;

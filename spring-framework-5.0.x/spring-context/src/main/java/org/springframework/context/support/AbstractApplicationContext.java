@@ -518,13 +518,13 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		synchronized (this.startupShutdownMonitor) {
 			// Prepare this context for refreshing.
 			/**
-			 * 准备工作包括，设置启动时间，是否激活标识位，初始化属性源配置
+			 * 准备工作包括，设置启动时间，是否激活标识位(容器是否可用)，初始化属性源配置,不重要,不属于生命周期
 			 */
 			prepareRefresh();
 
 			// Tell the subclass to refresh the internal bean factory.
 			/**
-			 * 准备工作，得到 DefaultListableBeanFactory(生命周期的开始,严格来说，初始化Bean工厂)
+			 * 准备工作，得到 DefaultListableBeanFactory 实现了ConfigurableListableBeanFactory (生命周期的开始,严格来说，初始化Bean工厂)
 			 */
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
@@ -542,27 +542,35 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				// Invoke factory processors registered as beans in the context.
 				/**
 				 * 设置自定义的ProcessBeanFactory
+				 * 调用BeanFactory的后处理器，这些后处理器是在Bean定义中向容器注册的
 				 */
 				invokeBeanFactoryPostProcessors(beanFactory);
 
+				// 注册Bean的后处理器，在Bean创建过程中调用
 				// Register bean processors that intercept bean creation.
 				registerBeanPostProcessors(beanFactory);
 
+				//对上下文的消息源进行初始化
 				// Initialize message source for this context.
 				initMessageSource();
 
+				// 初始化上下文中的事件机制
 				// Initialize event multicaster for this context.
 				initApplicationEventMulticaster();
 
+				// 初始化其他的特殊Bean
 				// Initialize other special beans in specific context subclasses.
 				onRefresh();
 
+				// 检查监听Bean并且将这些Bean向容器注册
 				// Check for listener beans and register them.
 				registerListeners();
 
+				// 实例化所有的（non-lazy-init）单件
 				// Instantiate all remaining (non-lazy-init) singletons.
 				finishBeanFactoryInitialization(beanFactory);
 
+				//  发布容器事件，结束refresh过程
 				// Last step: publish corresponding event.
 				finishRefresh();
 			}
@@ -663,14 +671,14 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		// Tell the internal bean factory to use the context's class loader etc.
 		//类加载器
 		beanFactory.setBeanClassLoader(getClassLoader());
-		//表达式加载器
+		//bean的表达式解释器
 		beanFactory.setBeanExpressionResolver(new StandardBeanExpressionResolver(beanFactory.getBeanClassLoader()));
 		beanFactory.addPropertyEditorRegistrar(new ResourceEditorRegistrar(this, getEnvironment()));
 
 		// Configure the bean factory with context callbacks.
 		/**
 		 * 最核心，没有之一
-		 * 添加一个后置处理器
+		 * Spring 添加一个后置处理器
 		 * 能够在bean中获得各种Aware
 		 */
 		beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));

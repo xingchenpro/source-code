@@ -239,9 +239,22 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 	protected <T> T doGetBean(final String name, @Nullable final Class<T> requiredType,
 			@Nullable final Object[] args, boolean typeCheckOnly) throws BeansException {
 
+		/**
+		 * 通过name获取beanName，这里不能使用name直接作为beanName，两个原因
+		 * 1、name可能会以&开头，表明调用者想获取FactoryBean本身，而非FactoryBean实现类所创建的bean,在BeanFactory中，
+		 * FactoryBean实现类和其他bean存储方式是一致的，即<beanName,bean> beanName中是没有&这个字符的，所以需要将name 的首字符&移除，
+		 * 这样才能从缓存里得到FactoryBean实例
+		 * 2、别名的问题，转换需要
+		 */
 		final String beanName = transformedBeanName(name);
 		Object bean;
-
+		/**
+		 * 从Spring容器中获取一个Bean，Spring容器是一个map
+		 * getSingleton(beanName)等于beanMap.get(beanName)
+		 * 这个方法会被调用两次
+		 * 这个方法会在Spring环境初始化的时候(也就是对象被创建的时候)调用一次
+		 * 还会在getBean的时候调用一次
+		 */
 		// Eagerly check singleton cache for manually registered singletons.
 		Object sharedInstance = getSingleton(beanName);
 		if (sharedInstance != null && args == null) {
