@@ -683,7 +683,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		 */
 		beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
 		/**
-		 * 自动注入忽略的列表
+		 * 自动注入忽略的列表,添加了这个类，无法自动注入
 		 */
 		beanFactory.ignoreDependencyInterface(EnvironmentAware.class);
 		beanFactory.ignoreDependencyInterface(EmbeddedValueResolverAware.class);
