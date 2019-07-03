@@ -56,11 +56,11 @@ final class PostProcessorRegistrationDelegate {
 
 		if (beanFactory instanceof BeanDefinitionRegistry) {
 			BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory;
-			////存放自定义的BeanFactoryPostProcessor
+			//存放程序员自己添加的实现了BeanFactoryPostProcessor的
 			List<BeanFactoryPostProcessor> regularPostProcessors = new ArrayList<>();
-			//处理我们自定义实现BeanDefinitionRegistryPostProcessor接口的
+			//存放程序员自己添加的实现了BeanDefinitionRegistryPostProcessor的
 			List<BeanDefinitionRegistryPostProcessor> registryProcessors = new ArrayList<>();
-			//自定义的BeanFactoryPostProcessor
+			//spring知道是实现BeanFactoryPostProcessor接口，但不知道实现了子类，所以判断一下
 			for (BeanFactoryPostProcessor postProcessor : beanFactoryPostProcessors) {
 				if (postProcessor instanceof BeanDefinitionRegistryPostProcessor) {
 					BeanDefinitionRegistryPostProcessor registryProcessor =
@@ -85,17 +85,22 @@ final class PostProcessorRegistrationDelegate {
 			String[] postProcessorNames =
 					beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
 			//这个地方可以得到一个BeanFactoryPostProcessor，因为是Spring自己在默认最开始时注册的
+			//为什么要注册?
+			//spring工厂需要解析和扫描等功能
+			//这些功能都是在spring工厂初始化完成之前执行，要么在工厂最开始的时候，要么在工厂初始化之中
+			//如果在之后就没有意义，哪位那个时候已经需要使用工厂了
 			//Spring一开始就注册了BeanFactoryPostProcessor，用来插手SpringFactory实例化过程
 			//在这个地方断点可以知道这个类叫ConfigurationClassPostProcessor
 			for (String ppName : postProcessorNames) {
 				if (beanFactory.isTypeMatch(ppName, PriorityOrdered.class)) {
+					//在这里注册了
 					currentRegistryProcessors.add(beanFactory.getBean(ppName, BeanDefinitionRegistryPostProcessor.class));
 					processedBeans.add(ppName);
 				}
 			}
 			//排序
 			sortPostProcessors(currentRegistryProcessors, beanFactory);
-			//合并list
+			//合并list，合并自己定义的RegistryProcessors
 			registryProcessors.addAll(currentRegistryProcessors);
 			//最重要，这里是方法调用
 			invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
@@ -103,6 +108,8 @@ final class PostProcessorRegistrationDelegate {
 
 			// Next, invoke the BeanDefinitionRegistryPostProcessors that implement Ordered.
 			postProcessorNames = beanFactory.getBeanNamesForType(BeanDefinitionRegistryPostProcessor.class, true, false);
+
+
 			for (String ppName : postProcessorNames) {
 				if (!processedBeans.contains(ppName) && beanFactory.isTypeMatch(ppName, Ordered.class)) {
 					currentRegistryProcessors.add(beanFactory.getBean(ppName, BeanDefinitionRegistryPostProcessor.class));

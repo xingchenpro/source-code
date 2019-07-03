@@ -51,6 +51,7 @@ public interface ImportSelector {
 	 * Select and return the names of which class(es) should be imported based on
 	 * the {@link AnnotationMetadata} of the importing @{@link Configuration} class.
 	 */
+	////返回一个对象，但无法得到代理对象并返回，因为这个类先要在项目中
 	String[] selectImports(AnnotationMetadata importingClassMetadata);
 
 }

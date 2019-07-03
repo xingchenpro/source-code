@@ -313,6 +313,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 			return addCandidateComponentsFromIndex(this.componentsIndex, basePackage);
 		}
 		else {
+			//
 			return scanCandidateComponents(basePackage);
 		}
 	}
@@ -429,6 +430,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 					try {
 						MetadataReader metadataReader = getMetadataReaderFactory().getMetadataReader(resource);
 						if (isCandidateComponent(metadataReader)) {
+							//
 							ScannedGenericBeanDefinition sbd = new ScannedGenericBeanDefinition(metadataReader);
 							sbd.setResource(resource);
 							sbd.setSource(resource);
@@ -436,6 +438,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 								if (debugEnabled) {
 									logger.debug("Identified candidate component class: " + resource);
 								}
+								//
 								candidates.add(sbd);
 							}
 							else {

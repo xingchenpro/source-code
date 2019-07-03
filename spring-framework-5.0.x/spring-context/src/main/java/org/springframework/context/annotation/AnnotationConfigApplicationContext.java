@@ -82,6 +82,11 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 		 * 只能读取加了注解的类，this代表整个大的环境
 		 */
 		this.reader = new AnnotatedBeanDefinitionReader(this);
+		/**
+		 * 可以用来扫描包或类
+		 * 实际上扫描包的不是这个对象
+		 * 这里的scanner只提供外部调用
+		 */
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
 	}
 

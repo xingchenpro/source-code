@@ -524,7 +524,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 			// Tell the subclass to refresh the internal bean factory.
 			/**
-			 * 准备工作，得到 DefaultListableBeanFactory 实现了ConfigurableListableBeanFactory (生命周期的开始,严格来说，初始化Bean工厂)
+			 * 准备工作，得到beanFactory, DefaultListableBeanFactory 实现了ConfigurableListableBeanFactory (生命周期的开始,严格来说，初始化Bean工厂)
 			 */
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
@@ -541,8 +541,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 
 				// Invoke factory processors registered as beans in the context.
 				/**
-				 * 设置自定义的ProcessBeanFactory
-				 * 调用BeanFactory的后处理器，这些后处理器是在Bean定义中向容器注册的
+				 * 执行自定义的和Spring内部定义的BeanFactoryPostProcessors
+				 * 这里只执行一个
 				 */
 				invokeBeanFactoryPostProcessors(beanFactory);
 
@@ -673,6 +673,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		beanFactory.setBeanClassLoader(getClassLoader());
 		//bean的表达式解释器
 		beanFactory.setBeanExpressionResolver(new StandardBeanExpressionResolver(beanFactory.getBeanClassLoader()));
+		//Property和String的转化
 		beanFactory.addPropertyEditorRegistrar(new ResourceEditorRegistrar(this, getEnvironment()));
 
 		// Configure the bean factory with context callbacks.
@@ -737,7 +738,9 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * <p>Must be called before singleton instantiation.
 	 */
 	protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
-		//getBeanFactoryPostProcessors() 得到自己定义的（就是程序员自己写的，并且没有交给spring管理，就是没有加上@Component）
+		//getBeanFactoryPostProcessors() 得手动给spring的（就是程序员自己写的，可以加加上@Component，也可以不加）
+		//加了@Component得不到，getBeanFactoryPostProcessors()直接获取一个list(beanFactoryPostProcessors)，这个list在AnnotationConfigApplicationContext维护
+		//applicationContext.addBeanFactoryPostProcessor(new xxx); //手动添加才能得到
 		PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors());
 
 		// Detect a LoadTimeWeaver and prepare for weaving, if found in the meantime
