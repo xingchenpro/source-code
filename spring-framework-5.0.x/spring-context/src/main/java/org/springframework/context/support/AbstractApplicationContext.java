@@ -546,7 +546,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				 */
 				invokeBeanFactoryPostProcessors(beanFactory);
 
-				// 注册Bean的后处理器，在Bean创建过程中调用
+				// 注册Bean的后置处理器，在Bean创建过程中调用
+				//添加AOP等拦截器
 				// Register bean processors that intercept bean creation.
 				registerBeanPostProcessors(beanFactory);
 

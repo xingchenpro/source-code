@@ -102,7 +102,7 @@ final class PostProcessorRegistrationDelegate {
 			sortPostProcessors(currentRegistryProcessors, beanFactory);
 			//合并list，合并自己定义的RegistryProcessors
 			registryProcessors.addAll(currentRegistryProcessors);
-			//最重要，这里是方法调用
+			//最重要，这里是方法调用，执行BeanFactoryPostProcessor的子类BeanDefinitionRegisterPostProcessor
 			invokeBeanDefinitionRegistryPostProcessors(currentRegistryProcessors, registry);
 			currentRegistryProcessors.clear();
 
@@ -139,8 +139,12 @@ final class PostProcessorRegistrationDelegate {
 				currentRegistryProcessors.clear();
 			}
 
+			//执行BeanFactoryPostProcessor的回调
+			//前面是执行BeanFactoryPostProcessor的子类BeanDefinitionRegisterPostProcessor的回调
+			//这里是执行BeanFactoryPostProcessor的postProcessorBeanFactory
 			// Now, invoke the postProcessBeanFactory callback of all processors handled so far.
 			invokeBeanFactoryPostProcessors(registryProcessors, beanFactory);
+			//自定义的BeanFactoryPostProcessor
 			invokeBeanFactoryPostProcessors(regularPostProcessors, beanFactory);
 		}
 
@@ -151,6 +155,7 @@ final class PostProcessorRegistrationDelegate {
 
 		// Do not initialize FactoryBeans here: We need to leave all regular beans
 		// uninitialized to let the bean factory post-processors apply to them!
+		//
 		String[] postProcessorNames =
 				beanFactory.getBeanNamesForType(BeanFactoryPostProcessor.class, true, false);
 
@@ -160,6 +165,7 @@ final class PostProcessorRegistrationDelegate {
 		List<String> orderedPostProcessorNames = new ArrayList<>();
 		List<String> nonOrderedPostProcessorNames = new ArrayList<>();
 		for (String ppName : postProcessorNames) {
+			//包含
 			if (processedBeans.contains(ppName)) {
 				// skip - already processed in first phase above
 			}
@@ -298,6 +304,7 @@ final class PostProcessorRegistrationDelegate {
 			Collection<? extends BeanFactoryPostProcessor> postProcessors, ConfigurableListableBeanFactory beanFactory) {
 
 		for (BeanFactoryPostProcessor postProcessor : postProcessors) {
+			//进入
 			postProcessor.postProcessBeanFactory(beanFactory);
 		}
 	}

@@ -29,7 +29,7 @@ public class MyImportBeanDefinitionRegistrar implements ImportBeanDefinitionRegi
 		//这里bd的类型为IndexDao.class
 		GenericBeanDefinition beanDefinition = (GenericBeanDefinition) builder.getBeanDefinition();
 		beanDefinition.setBeanClass(MyFactoryBean.class);
-		//根据名字找到注入的类型
+		//添加构造方法，根据名字找到添加的类型,
 		beanDefinition.getConstructorArgumentValues().addGenericArgumentValue("com.javahly.spring25.dao.IndexDao");
 		registry.registerBeanDefinition("indexDao",beanDefinition);
 

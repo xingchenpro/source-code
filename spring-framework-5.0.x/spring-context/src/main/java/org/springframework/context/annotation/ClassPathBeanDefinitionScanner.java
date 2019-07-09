@@ -270,10 +270,11 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 	 */
 	protected Set<BeanDefinitionHolder> doScan(String... basePackages) {
 		Assert.notEmpty(basePackages, "At least one base package must be specified");
-		//扫描basePackage路径下的java文件
-		//并把它转成BeanDefinition
+
 		Set<BeanDefinitionHolder> beanDefinitions = new LinkedHashSet<>();
 		for (String basePackage : basePackages) {
+			//扫描basePackage路径下的java文件
+			//并把它转成BeanDefinition
 			Set<BeanDefinition> candidates = findCandidateComponents(basePackage);
 			//拿出对象
 			for (BeanDefinition candidate : candidates) {
@@ -282,6 +283,7 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 				candidate.setScope(scopeMetadata.getScopeName());
 				String beanName = this.beanNameGenerator.generateBeanName(candidate, this.registry);
 				if (candidate instanceof AbstractBeanDefinition) {
+					//ScannedGenericBeanDefinition sbd = new ScannedGenericBeanDefinition(metadataReader);(findCandidateComponents)
 					//如果这个类是AbstractBeanDefinition的子类
 					//则为他设置默认值,如lazy，init，destroy
 					postProcessBeanDefinition((AbstractBeanDefinition) candidate, beanName);
