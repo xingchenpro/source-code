@@ -248,14 +248,15 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 		 */
 		final String beanName = transformedBeanName(name);
 		Object bean;
-		/**
-		 * 从Spring容器中获取一个Bean，Spring容器是一个map
-		 * getSingleton(beanName)等于beanMap.get(beanName)
-		 * 这个方法会被调用两次
-		 * 这个方法会在Spring环境初始化的时候(也就是对象被创建的时候)调用一次
-		 * 还会在getBean的时候调用一次
-		 */
 		// Eagerly check singleton cache for manually registered singletons.
+		/**
+		 * 第一次调用 getSingleton
+		 * 初始化时调用，getBean时也会调用
+		 * spring初始化时先获取这个对象，判断这个对象是否被实例好了
+		 * 这个方法会在Spring初始化时调用此意，还会在getBean时调用一次
+		 * 初始化时一般都返回null，因为还没有到正在创建的时候
+		 * lazy为true时不为空
+		 */
 		Object sharedInstance = getSingleton(beanName);
 		if (sharedInstance != null && args == null) {
 			if (logger.isDebugEnabled()) {
@@ -267,10 +268,12 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					logger.debug("Returning cached instance of singleton bean '" + beanName + "'");
 				}
 			}
+			//不等于空直接返回
 			bean = getObjectForBeanInstance(sharedInstance, name, beanName, null);
 		}
 
 		else {
+			//原型，原型不应该在初始化时创建
 			// Fail if we're already creating this bean instance:
 			// We're assumably within a circular reference.
 			if (isPrototypeCurrentlyInCreation(beanName)) {
@@ -296,6 +299,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 				}
 			}
 
+			//已经创建了
 			if (!typeCheckOnly) {
 				markBeanAsCreated(beanName);
 			}
@@ -323,10 +327,12 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
 					}
 				}
 
+				//第 二 次调用 getSingleton，和第一个不是同一个getSingleton
 				// Create bean instance.
 				if (mbd.isSingleton()) {
 					sharedInstance = getSingleton(beanName, () -> {
 						try {
+							//
 							return createBean(beanName, mbd, args);
 						}
 						catch (BeansException ex) {

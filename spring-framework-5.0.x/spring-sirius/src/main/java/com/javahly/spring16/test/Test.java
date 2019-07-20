@@ -1,6 +1,7 @@
 package com.javahly.spring16.test;
 
 import com.javahly.spring16.config.AppConfig;
+import org.aspectj.lang.annotation.Aspect;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 
@@ -13,7 +14,6 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
  * @QQ :1136513099
  * @desc :
  */
-
 public class Test {
 	public static void main(String[] args){
 		AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();

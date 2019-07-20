@@ -205,29 +205,32 @@ final class PostProcessorRegistrationDelegate {
 	}
 
 	public static void registerBeanPostProcessors(
-			ConfigurableListableBeanFactory beanFactory, AbstractApplicationContext applicationContext) {
+						ConfigurableListableBeanFactory beanFactory, AbstractApplicationContext applicationContext) {
 
-		String[] postProcessorNames = beanFactory.getBeanNamesForType(BeanPostProcessor.class, true, false);
+					//从bd中得到所有的BeanPostProcessor
+					String[] postProcessorNames = beanFactory.getBeanNamesForType(BeanPostProcessor.class, true, false);
 
-		// Register BeanPostProcessorChecker that logs an info message when
-		// a bean is created during BeanPostProcessor instantiation, i.e. when
-		// a bean is not eligible for getting processed by all BeanPostProcessors.
-		int beanProcessorTargetCount = beanFactory.getBeanPostProcessorCount() + 1 + postProcessorNames.length;
-		beanFactory.addBeanPostProcessor(new BeanPostProcessorChecker(beanFactory, beanProcessorTargetCount));
+					// Register BeanPostProcessorChecker that logs an info message when
+					// a bean is created during BeanPostProcessor instantiation, i.e. when
+					// a bean is not eligible for getting processed by all BeanPostProcessors.
+					int beanProcessorTargetCount = beanFactory.getBeanPostProcessorCount() + 1 + postProcessorNames.length;
 
-		// Separate between BeanPostProcessors that implement PriorityOrdered,
-		// Ordered, and the rest.
-		List<BeanPostProcessor> priorityOrderedPostProcessors = new ArrayList<>();
-		List<BeanPostProcessor> internalPostProcessors = new ArrayList<>();
-		List<String> orderedPostProcessorNames = new ArrayList<>();
-		List<String> nonOrderedPostProcessorNames = new ArrayList<>();
-		for (String ppName : postProcessorNames) {
-			if (beanFactory.isTypeMatch(ppName, PriorityOrdered.class)) {
-				BeanPostProcessor pp = beanFactory.getBean(ppName, BeanPostProcessor.class);
-				priorityOrderedPostProcessors.add(pp);
-				if (pp instanceof MergedBeanDefinitionPostProcessor) {
-					internalPostProcessors.add(pp);
-				}
+					//BeanPostProcessorChecker,检查Spring中的Bean有没有执行后置处理器
+					beanFactory.addBeanPostProcessor(new BeanPostProcessorChecker(beanFactory, beanProcessorTargetCount));
+
+					// Separate between BeanPostProcessors that implement PriorityOrdered,
+					// Ordered, and the rest.
+					List<BeanPostProcessor> priorityOrderedPostProcessors = new ArrayList<>();
+					List<BeanPostProcessor> internalPostProcessors = new ArrayList<>();
+					List<String> orderedPostProcessorNames = new ArrayList<>();
+					List<String> nonOrderedPostProcessorNames = new ArrayList<>();
+					for (String ppName : postProcessorNames) {
+						if (beanFactory.isTypeMatch(ppName, PriorityOrdered.class)) {
+							BeanPostProcessor pp = beanFactory.getBean(ppName, BeanPostProcessor.class);
+							priorityOrderedPostProcessors.add(pp);
+							if (pp instanceof MergedBeanDefinitionPostProcessor) {
+								internalPostProcessors.add(pp);
+							}
 			}
 			else if (beanFactory.isTypeMatch(ppName, Ordered.class)) {
 				orderedPostProcessorNames.add(ppName);
@@ -270,6 +273,7 @@ final class PostProcessorRegistrationDelegate {
 
 		// Re-register post-processor for detecting inner beans as ApplicationListeners,
 		// moving it to the end of the processor chain (for picking up proxies etc).
+		//
 		beanFactory.addBeanPostProcessor(new ApplicationListenerDetector(applicationContext));
 	}
 

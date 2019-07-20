@@ -77,8 +77,9 @@ public class InjectionMetadata {
 		}
 		this.checkedElements = checkedElements;
 	}
-
+	//
 	public void inject(Object target, @Nullable String beanName, @Nullable PropertyValues pvs) throws Throwable {
+
 		Collection<InjectedElement> checkedElements = this.checkedElements;
 		Collection<InjectedElement> elementsToIterate =
 				(checkedElements != null ? checkedElements : this.injectedElements);
@@ -175,6 +176,7 @@ public class InjectionMetadata {
 				throws Throwable {
 
 			if (this.isField) {
+				//属性
 				Field field = (Field) this.member;
 				ReflectionUtils.makeAccessible(field);
 				field.set(target, getResourceToInject(target, requestingBeanName));

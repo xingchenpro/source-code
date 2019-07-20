@@ -141,6 +141,13 @@ import org.springframework.util.StringValueResolver;
  */
 @SuppressWarnings("serial")
 //处理Bean生命周期回调
+/**
+ * 处理@Resource @PostConstruct，@PreDestroy
+ * Resource的处理是由他自己完成的
+ * 其他父类是由他的父亲完成的
+ * 父类的 InitDestroyAnnotationBeanPostProcessor，InstantiationAwareBeanPostProcessor
+ * 会找出被@PostConstruct和@PreDestroy注解修饰的方法
+ */
 public class CommonAnnotationBeanPostProcessor extends InitDestroyAnnotationBeanPostProcessor
 		implements InstantiationAwareBeanPostProcessor, BeanFactoryAware, Serializable {
 
