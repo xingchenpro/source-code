@@ -16,4 +16,5 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan("com.javahly.spring23")
 public class AppConfig {
+
 }

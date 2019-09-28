@@ -16,6 +16,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class IndexDaoImpl implements IndexDao {
+	public IndexDaoImpl() {
+		System.out.println("aaa");
+	}
 
 	@Override
 	public void query() {

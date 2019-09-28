@@ -281,7 +281,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 					logger.debug("Bean definition has already been processed as a configuration class: " + beanDef);
 				}
 			}
-			////判断是不是5种类型类，添加到list中
+			//判断是不是5种类型类，添加到list中
 			else if (ConfigurationClassUtils.checkConfigurationClassCandidate(beanDef, this.metadataReaderFactory)) {
 				configCandidates.add(new BeanDefinitionHolder(beanDef, beanName));
 			}
@@ -325,7 +325,6 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 				this.metadataReaderFactory, this.problemReporter, this.environment,
 				this.resourceLoader, this.componentScanBeanNameGenerator, registry);
 		//可能有多个配置类重复了
-
 		Set<BeanDefinitionHolder> candidates = new LinkedHashSet<>(configCandidates);
 		//alreadyParsed处理过就放到里面
 		Set<ConfigurationClass> alreadyParsed = new HashSet<>(configCandidates.size());

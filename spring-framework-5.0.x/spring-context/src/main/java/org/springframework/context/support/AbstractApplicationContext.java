@@ -518,34 +518,29 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		synchronized (this.startupShutdownMonitor) {
 			// Prepare this context for refreshing.
 			/**
-			 * 准备工作包括，设置启动时间，是否激活标识位(容器是否可用)，初始化属性源配置,不重要,不属于生命周期
+			 * 包括准备工作，设置启动时间，是否激活标识位(容器是否可用)，初始化属性源配置,不重要,不属于生命周期
 			 */
 			prepareRefresh();
-
 			// Tell the subclass to refresh the internal bean factory.
 			/**
 			 * 准备工作，得到beanFactory, DefaultListableBeanFactory 实现了ConfigurableListableBeanFactory (生命周期的开始,严格来说，初始化Bean工厂)
 			 */
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
-
 			// Prepare the bean factory for use in this context.
 			/**
 			 * 准备bean工厂，重要(生命周期的开始)
 			 */
 			prepareBeanFactory(beanFactory);
-
 			try {
 				// Allows post-processing of the bean factory in context subclasses.
 				//当前版本没有，后面版本可能会扩展
 				postProcessBeanFactory(beanFactory);
-
 				// Invoke factory processors registered as beans in the context.
 				/**
 				 * 执行自定义的和Spring内部定义的BeanFactoryPostProcessors
 				 * 这里只执行一个
 				 */
 				invokeBeanFactoryPostProcessors(beanFactory);
-
 				// 注册Bean的后置处理器，在Bean创建过程中调用
 				//添加AOP等拦截器
 				// Register bean processors that intercept bean creation.
@@ -554,23 +549,18 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				//对上下文的消息源进行初始化，国际化
 				// Initialize message source for this context.
 				initMessageSource();
-
 				// 初始化上下文中的事件机制
 				// Initialize event multicaster for this context.
 				initApplicationEventMulticaster();
-
 				// 初始化其他的特殊Bean，扩展用的，空壳方法
 				// Initialize other special beans in specific context subclasses.
 				onRefresh();
-
 				// 检查监听Bean并且将这些Bean向容器注册
 				// Check for listener beans and register them.
 				registerListeners();
-
-				// 实例化所有的（non-lazy-init）单件
+				// 实例化所有的（non-lazy-init）单例
 				// Instantiate all remaining (non-lazy-init) singletons.
 				finishBeanFactoryInitialization(beanFactory);
-
 				//  发布容器事件，结束refresh过程
 				// Last step: publish corresponding event.
 				finishRefresh();
@@ -581,17 +571,13 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 					logger.warn("Exception encountered during context initialization - " +
 							"cancelling refresh attempt: " + ex);
 				}
-
 				// Destroy already created singletons to avoid dangling resources.
 				destroyBeans();
-
 				// Reset 'active' flag.
 				cancelRefresh(ex);
-
 				// Propagate exception to caller.
 				throw ex;
 			}
-
 			finally {
 				// Reset common introspection caches in Spring's core, since we
 				// might not ever need metadata for singleton beans anymore...
@@ -676,17 +662,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		beanFactory.setBeanExpressionResolver(new StandardBeanExpressionResolver(beanFactory.getBeanClassLoader()));
 		//Property和String的转化
 		beanFactory.addPropertyEditorRegistrar(new ResourceEditorRegistrar(this, getEnvironment()));
-
 		// Configure the bean factory with context callbacks.
-		/**
-		 * 最核心，没有之一
-		 * Spring 添加一个后置处理器
-		 * 能够在bean中获得各种Aware
-		 */
+		//Spring 添加一个后置处理器,能够在bean中获得各种Aware
 		beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
-		/**
-		 * 自动注入忽略的列表,添加了这个类，无法自动注入
-		 */
+		//自动注入忽略的列表,添加了这个类，无法自动注入
 		beanFactory.ignoreDependencyInterface(EnvironmentAware.class);
 		beanFactory.ignoreDependencyInterface(EmbeddedValueResolverAware.class);
 		beanFactory.ignoreDependencyInterface(ResourceLoaderAware.class);

@@ -36,7 +36,7 @@ public class AspectJ {
 	}
 
 	//环绕通知改变参数
-	@Around("pointCutExecution()")
+	//@Around("pointCutExecution()")
 	public void around(ProceedingJoinPoint pjp) throws Throwable {
 		System.out.println("around ......");
 		Object args[] = pjp.getArgs();

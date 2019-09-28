@@ -60,6 +60,7 @@ public class DefaultAopProxyFactory implements AopProxyFactory, Serializable {
 			return new ObjenesisCglibAopProxy(config);
 		}
 		else {
+			//
 			return new JdkDynamicAopProxy(config);
 		}
 	}

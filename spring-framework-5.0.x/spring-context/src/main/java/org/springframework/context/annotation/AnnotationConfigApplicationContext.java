@@ -88,6 +88,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 		 * 这里的scanner只提供外部调用
 		 */
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
+
 	}
 
 	/**

@@ -16,6 +16,6 @@ public class AnnotationBasedDao  {
 
 
     public void test() {
-        System.out.println("AnnotationBased Test......");
+        System.out.println("AnnotationBased SpringMVCTest......");
     }
 }

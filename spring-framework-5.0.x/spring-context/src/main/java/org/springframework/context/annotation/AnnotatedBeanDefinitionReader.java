@@ -215,7 +215,6 @@ public class AnnotatedBeanDefinitionReader {
 	 */
 	<T> void doRegisterBean(Class<T> annotatedClass, @Nullable Supplier<T> instanceSupplier, @Nullable String name,
 			@Nullable Class<? extends Annotation>[] qualifiers, BeanDefinitionCustomizer... definitionCustomizers) {
-
 		/**
 		 * 根据指定的Bean创建一个AnnotatedGenericBeanDefinition
 		 * AnnotatedGenericBeanDefinition :一个数据结构(描述Bean的信息)
@@ -223,7 +222,6 @@ public class AnnotatedBeanDefinitionReader {
 		 * scope lazy等
 		 */
 		AnnotatedGenericBeanDefinition abd = new AnnotatedGenericBeanDefinition(annotatedClass);
-
 		/**
 		 * 这个类是否需要跳过解析
 		 * 通过代码可以知道spring判断是否跳过解析，主要判断有没有注解
@@ -231,31 +229,25 @@ public class AnnotatedBeanDefinitionReader {
 		if (this.conditionEvaluator.shouldSkip(abd.getMetadata())) {
 			return;
 		}
-
 		abd.setInstanceSupplier(instanceSupplier);
-
 		/**
 		 * 得到类的作用域
 		 */
 		ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(abd);
-
 		/**
 		 * 把类的作用域添加到数据结构中
 		 */
 		abd.setScope(scopeMetadata.getScopeName());
-
 		/**
 		 * 生成Bean的名字
 		 */
 		String beanName = (name != null ? name : this.beanNameGenerator.generateBeanName(abd, this.registry));
-
 		/**
 		 * 处理类中的通用注解
 		 * Lazy，DependsOn，Primary等注解
 		 * 处理完成后添加到数据结构中
 		 */
 		AnnotationConfigUtils.processCommonDefinitionAnnotations(abd);
-
 		/**
 		 * 在容器注册注解了的Bean时，使用了额外的限定符注解则解析(如@Qualifier)
 		 */
@@ -272,23 +264,18 @@ public class AnnotatedBeanDefinitionReader {
 				}
 			}
 		}
-
 		//自定义注解
 		for (BeanDefinitionCustomizer customizer : definitionCustomizers) {
 			customizer.customize(abd);
 		}
-
 		/**
 		 * BeanDefinitionHolder 一个数据结构 ,把beanName和Bean描述关联起来
 		 */
-
 		BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(abd, beanName);
-
 		/**
 		 * 代理模型，重点
 		 */
 		definitionHolder = AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
-
 		/**
 		 * 把上述的数据结构注册给register
 		 * register就是AnnotationConfigApplicationContext
@@ -296,10 +283,8 @@ public class AnnotatedBeanDefinitionReader {
 		 * 实例化一个DefaultListableBeanFactory
 		 * registerBeanDefinition把definitionHolder这个数据结构包含的信息注册到DefaultListableBeanFactory这个工厂
 		 */
-
 		BeanDefinitionReaderUtils.registerBeanDefinition(definitionHolder, this.registry);
 	}
-
 
 	/**
 	 * Get the Environment from the given registry if possible, otherwise return a new
